@@ -22,11 +22,11 @@ jobs:
 
       - name: Build and export Next.js app
         env:
-          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
+          NEXT_PUBLIC_CONVEX_URL: ${ secrets.NEXT_PUBLIC_CONVEX_URL }
         run: npm run build && npm run export
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${ secrets.GITHUB_TOKEN }
           publish_dir: ./out
