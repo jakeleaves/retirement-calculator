@@ -15,18 +15,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '18.17.0'
+          node-version: '18.x'  # Ensure you're using Node.js >= 18
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build and export Next.js app
+      - name: Build the Next.js app
         env:
-          NEXT_PUBLIC_CONVEX_URL: ${ secrets.NEXT_PUBLIC_CONVEX_URL }
-        run: npm run build && npm run export
+          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}  # Pass your Convex URL securely
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${ secrets.GITHUB_TOKEN }
-          publish_dir: ./out
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out  # Ensure `output: 'export'` generates content here
