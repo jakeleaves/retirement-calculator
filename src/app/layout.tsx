@@ -12,11 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
-        {/* Wrap the application with ConvexProvider */}
+      <body className="min-h-screen flex flex-col bg-gray-50">
         <ClientProvider>
           <Header />
-          <main className="flex-grow container mx-auto p-4">
+          <main className="flex-grow flex items-center justify-center">
             {children}
           </main>
           <Footer />
@@ -27,17 +26,17 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 }
 
 const Header = () => (
-  <header className="bg-blue-600 text-white p-4">
-    <div className="container mx-auto">
-      <h1 className="text-2xl font-bold">Retirement Calculator</h1>
+  <header className="bg-white shadow-md w-full py-4">
+    <div className="container mx-auto px-4">
+      <h1 className="text-3xl font-bold text-center text-gray-800">Retirement FIRE Calculator</h1>
     </div>
   </header>
 );
 
 const Footer = () => (
-  <footer className="bg-blue-600 text-white p-4 mt-8">
-    <div className="container mx-auto text-center">
-      © {new Date().getFullYear()} Your Company
+  <footer className="bg-gray-200 text-gray-700 text-sm text-center py-4 mt-8">
+    <div className="container mx-auto">
+      © {new Date().getFullYear()} Your Company. All rights reserved.
     </div>
   </footer>
 );

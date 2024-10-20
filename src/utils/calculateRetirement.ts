@@ -2,74 +2,59 @@
 
 export interface RetirementInput {
     age: number;
-    retirementAge: number;
     monthlySavings: number;
     retirementAnnualSpending: number;
     currentNetWorth: number;
-    endAge: number;
-    expectedReturnRate: number; // Expected annual return rate in percentage (e.g., 5 for 5%)
+    expectedReturnRate: number; // in percentage, e.g., 5 for 5%
+    withdrawalRate: number;      // in percentage, e.g., 4 for 4%
   }
   
   export interface RetirementOutput {
     fireNumber: number;
     fireAge: number;
     yearsUntilFire: number;
-    detailedNetWorth: { age: number; netWorth: number }[];
+    detailedNetWorth: { age: number; netWorth: number; contributions: number; ratio: number }[];
   }
   
-  /**
-   * Calculates retirement metrics based on user inputs.
-   *
-   * @param input - The retirement input parameters.
-   * @returns The retirement output metrics.
-   */
   export const calculateRetirement = (input: RetirementInput): RetirementOutput => {
     const {
       age,
-      retirementAge,
       monthlySavings,
       retirementAnnualSpending,
       currentNetWorth,
-      endAge,
       expectedReturnRate,
+      withdrawalRate,
     } = input;
   
-    const yearsUntilRetirement = retirementAge - age;
-    const yearsInRetirement = endAge - retirementAge;
-  
-    // Convert expected return rate from percentage to decimal
+    const fireNumber = retirementAnnualSpending / (withdrawalRate / 100);
     const annualReturnRate = expectedReturnRate / 100;
-    const monthlyReturn = annualReturnRate / 12;
   
-    // Future Value of Current Net Worth
-    const fvCurrent = currentNetWorth * Math.pow(1 + monthlyReturn, yearsUntilRetirement * 12);
+    let totalSavings = currentNetWorth;
+    let totalContributions = 0;
+    let yearsUntilFire = 0;
+    const detailedNetWorth: { age: number; netWorth: number; contributions: number; ratio: number }[] = [];
   
-    // Future Value of Monthly Savings
-    const fvSavings = monthlySavings * ((Math.pow(1 + monthlyReturn, yearsUntilRetirement * 12) - 1) / monthlyReturn);
-    const totalSavings = fvCurrent + fvSavings;
+    while (totalSavings < fireNumber && yearsUntilFire < 100) {
+      yearsUntilFire += 1;
   
-    // FIRE Number: The amount needed at retirement to sustain annual spending
-    const fireNumber = retirementAnnualSpending / annualReturnRate;
+      // Add annual contributions
+      totalContributions += monthlySavings * 12;
   
-    // Years Until FIRE
-    const yearsUntilFire = Math.log(fireNumber / totalSavings) / Math.log(1 + annualReturnRate);
+      // Add contributions to the total savings
+      totalSavings += monthlySavings * 12;
   
-    // FIRE Age
-    const fireAge = age + yearsUntilFire;
+      // Apply annual return
+      totalSavings *= 1 + annualReturnRate;
   
-    // Generate detailed net worth data for visualization
-    const detailedNetWorth: { age: number; netWorth: number }[] = [];
-    let currentNetWorthProjection = currentNetWorth;
-  
-    for (let y = 1; y <= endAge - age; y++) {
-      for (let m = 1; m <= 12; m++) {
-        currentNetWorthProjection = currentNetWorthProjection * (1 + monthlyReturn) + monthlySavings;
-      }
       detailedNetWorth.push({
-        age: age + y,
-        netWorth: parseFloat(currentNetWorthProjection.toFixed(2)),
+        age: age + yearsUntilFire,
+        netWorth: parseFloat(totalSavings.toFixed(2)),
+        contributions: parseFloat(totalContributions.toFixed(2)),
+        ratio: parseFloat((totalSavings / totalContributions).toFixed(2)),
       });
     }
+  
+    const fireAge = age + yearsUntilFire;
   
     return {
       fireNumber: parseFloat(fireNumber.toFixed(2)),

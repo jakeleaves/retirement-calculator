@@ -14,43 +14,39 @@ import { calculateRetirement } from "../../src/utils/calculateRetirement";
  * @throws Will throw an error if input validation fails.
  */
 export const calculateFIRE = mutation({
-  args: {
-    age: v.number(),
-    retirementAge: v.number(),
-    monthlySavings: v.number(),
-    retirementAnnualSpending: v.number(),
-    currentNetWorth: v.number(),
-    endAge: v.number(),
-    expectedReturnRate: v.number(),
-  },
-  handler: async (ctx, input: RetirementInput): Promise<RetirementOutput> => {
-    const {
-      age,
-      retirementAge,
-      monthlySavings,
-      retirementAnnualSpending,
-      currentNetWorth,
-      endAge,
-      expectedReturnRate,
-    } = input;
-
-    // Additional Validation (Optional)
-    if (
-      age < 0 ||
-      retirementAge <= age ||
-      monthlySavings < 0 ||
-      retirementAnnualSpending < 0 ||
-      currentNetWorth < 0 ||
-      endAge <= retirementAge ||
-      expectedReturnRate < 0 ||
-      expectedReturnRate > 100 // Assuming a logical upper limit
-    ) {
-      throw new Error("Invalid input values. Please check your entries.");
-    }
-
-    // Perform the retirement calculation using your utility function
-    const output: RetirementOutput = calculateRetirement(input);
-
-    return output;
-  },
-});
+    args: {
+      age: v.number(),
+      monthlySavings: v.number(),
+      retirementAnnualSpending: v.number(),
+      currentNetWorth: v.number(),
+      expectedReturnRate: v.number(),
+      withdrawalRate: v.number(),
+    },
+    handler: async (ctx, input: RetirementInput): Promise<RetirementOutput> => {
+      const {
+        age,
+        monthlySavings,
+        retirementAnnualSpending,
+        currentNetWorth,
+        expectedReturnRate,
+        withdrawalRate,
+      } = input;
+  
+      // Additional Validation
+      if (
+        age < 0 ||
+        monthlySavings < 0 ||
+        retirementAnnualSpending < 0 ||
+        currentNetWorth < 0 ||
+        expectedReturnRate < 0 ||
+        withdrawalRate <= 0 // Withdrawal rate must be positive
+      ) {
+        throw new Error("Invalid input values. Please check your entries.");
+      }
+  
+      // Perform the retirement calculation using the utility function
+      const output: RetirementOutput = calculateRetirement(input);
+  
+      return output;
+    },
+  });
