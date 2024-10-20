@@ -24,30 +24,42 @@ interface SavingsChartProps {
 
 const SavingsChart: React.FC<SavingsChartProps> = ({ data }) => {
   return (
-    <div className="dark:bg-gray-900 bg-gray-100 p-4 rounded-lg"> {/* Set dark background for container */}
+    <div className="dark:bg-gray-900 bg-white p-4 rounded-lg">
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={data}
-          margin={{ left: 20, right: 20 }}
-          className="dark:bg-gray-900 bg-gray-100" // Set dark background inside the chart
+          margin={{ top: 10, right: 20, bottom: 40, left: 60 }} // Adjust padding for labels
         >
-          <CartesianGrid strokeDasharray="3 3" className="dark:stroke-gray-700" />
+          <CartesianGrid strokeDasharray="3 3" className="dark:stroke-gray-700 stroke-gray-300" />
+          
+          {/* X Axis */}
           <XAxis
             dataKey="age"
-            label={{ value: 'Age', position: 'insideBottomRight', offset: -5 }}
-            tick={{ fill: 'white' }} // Change text color to white in dark mode
+            label={{
+              value: 'Age (years)',
+              position: 'insideBottom', // Position it below the numbers
+              offset: -25, // Increased offset for extra space
+              className: 'text-black dark:text-white', // Use Tailwind for dynamic color
+            }}
+            tick={{ fill: 'currentColor' }} // Inherit the color dynamically
           />
+
+          {/* Y Axis */}
           <YAxis
-            label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft' }}
-            tick={{ fill: 'white' }} // Change Y axis text color in dark mode
+            tickFormatter={(value) => `$${value.toLocaleString()}`} // Format as $1,000,000
+            tick={{ fill: 'currentColor' }} // Inherit the color dynamically
           />
+
+          {/* Tooltip */}
           <Tooltip
             contentStyle={{
-              backgroundColor: '#333', // Dark background for tooltips
-              borderColor: '#555', // Darker border for tooltips
-              color: 'white', // Light text in tooltips
+              backgroundColor: 'var(--tooltip-bg)',
+              borderColor: 'var(--tooltip-border)',
+              color: 'var(--tooltip-text)',
             }}
           />
+
+          {/* Area for Contributions */}
           <Area
             type="monotone"
             dataKey="contributions"
@@ -56,6 +68,8 @@ const SavingsChart: React.FC<SavingsChartProps> = ({ data }) => {
             fillOpacity={0.4}
             name="Contributions"
           />
+
+          {/* Area for Net Worth */}
           <Area
             type="monotone"
             dataKey="netWorth"

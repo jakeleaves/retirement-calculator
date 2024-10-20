@@ -17,3 +17,15 @@ h1, h2, h3, h4, h5, h6 {
 a {
   @apply text-blue-500 hover:text-blue-700;
 }
+
+/* Hide spinner for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide spinner for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
