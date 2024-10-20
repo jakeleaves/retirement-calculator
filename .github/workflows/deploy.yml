@@ -22,7 +22,7 @@ jobs:
 
       - name: Build Next.js app
         env:
-          NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}  # Include the Convex URL from secrets
+          NEXT_PUBLIC_CONVEX_URL: ${ secrets.NEXT_PUBLIC_CONVEX_URL }  # Include the Convex URL from secrets
         run: npm run build  # Build the Next.js app and export static files
 
       - name: Move build to root directory
