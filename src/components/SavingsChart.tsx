@@ -1,6 +1,6 @@
 // src/components/SavingsChart.tsx
 
-import React from 'react'
+import React from 'react';
 import {
   LineChart,
   Line,
@@ -8,30 +8,28 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
-} from 'recharts'
+} from 'recharts';
 
 interface SavingsData {
-  year: number
-  savings: number
+  age: number;
+  netWorth: number;
 }
 
 interface SavingsChartProps {
-  data: SavingsData[]
+  data: SavingsData[];
 }
 
 const SavingsChart: React.FC<SavingsChartProps> = ({ data }) => (
-  <ResponsiveContainer width="100%" height={300}>
+  <ResponsiveContainer width="100%" height={400}>
     <LineChart data={data}>
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="year" />
-      <YAxis />
+      <XAxis dataKey="age" label={{ value: 'Age', position: 'insideBottomRight', offset: -5 }} />
+      <YAxis label={{ value: 'Net Worth ($)', angle: -90, position: 'insideLeft' }} />
       <Tooltip formatter={(value: number) => `$${value.toLocaleString()}`} />
-      <Legend />
-      <Line type="monotone" dataKey="savings" name="Savings" stroke="#8884d8" activeDot={{ r: 8 }} />
+      <Line type="monotone" dataKey="netWorth" stroke="#8884d8" activeDot={{ r: 8 }} />
     </LineChart>
   </ResponsiveContainer>
-)
+);
 
-export default SavingsChart
+export default SavingsChart;

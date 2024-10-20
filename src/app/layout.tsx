@@ -1,8 +1,8 @@
-// src/app/layout.tsx (server component)
+// src/app/layout.tsx
 
 import './globals.css';
 import { ReactNode } from 'react';
-import ClientWrapper from '@/components/ClientWrapper'; // New component that handles client-side logic
+import ClientProvider from '@/components/ClientProvider';
 
 export const metadata = {
   title: 'Retirement Calculator',
@@ -13,14 +13,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
-        {/* ClientWrapper handles ConvexProvider and any client-side logic */}
-        <ClientWrapper>
+        {/* Wrap the application with ConvexProvider */}
+        <ClientProvider>
           <Header />
           <main className="flex-grow container mx-auto p-4">
             {children}
           </main>
           <Footer />
-        </ClientWrapper>
+        </ClientProvider>
       </body>
     </html>
   );

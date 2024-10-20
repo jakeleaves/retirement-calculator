@@ -1,68 +1,56 @@
-// src/utils/calculateRetirement.ts
+// convex/functions/calculateRetirement.ts
 
-export interface RetirementInput {
-    currentAge: number
-    retirementAge: number
-    currentSavings: number
-    monthlyContribution: number
-    annualReturnRate: number // in percentage, e.g., 5 for 5%
-    inflationRate: number // in percentage
-    desiredRetirementIncome: number
-  }
-  
-  export interface RetirementOutput {
-    totalSavings: number
-    annualRetirementIncome: number
-    yearsInRetirement: number
-    detailedYearlySavings: { year: number; savings: number }[]
-  }
-  
-  /**
-   * Calculates retirement savings and related metrics.
-   *
-   * @param input - The retirement input parameters.
-   * @returns The retirement output metrics.
-   */
-  export const calculateRetirement = (input: RetirementInput): RetirementOutput => {
-    const yearsToRetirement = input.retirementAge - input.currentAge
-    const monthlyReturn = input.annualReturnRate / 100 / 12
-    const totalMonths = yearsToRetirement * 12
-  
-    // Future Value of current savings
-    const fvCurrent = input.currentSavings * Math.pow(1 + monthlyReturn, totalMonths)
-  
-    // Future Value of monthly contributions
-    const fvContributions =
-      input.monthlyContribution *
-      ((Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn)
-  
-    const totalSavings = fvCurrent + fvContributions
-  
-    // Adjust for inflation
-    const inflationAdjustedSavings =
-      totalSavings / Math.pow(1 + input.inflationRate / 100, yearsToRetirement)
-  
-    // Estimate annual retirement income (simple approach)
-    const annualRetirementIncome = inflationAdjustedSavings * (input.annualReturnRate / 100)
-  
-    // Assuming a fixed number of years in retirement (e.g., 30 years)
-    const yearsInRetirement = 30
-  
-    // Generate detailed yearly savings data for visualization
-    const detailedYearlySavings: { year: number; savings: number }[] = []
-    let savings = input.currentSavings
-    for (let year = 1; year <= yearsToRetirement; year++) {
-      for (let month = 1; month <= 12; month++) {
-        savings = savings * (1 + monthlyReturn) + input.monthlyContribution
-      }
-      detailedYearlySavings.push({ year, savings: parseFloat(savings.toFixed(2)) })
+import { mutation } from "../_generated/server";
+import { v } from "convex/values";
+import { RetirementInput, RetirementOutput } from "../../src/utils/calculateRetirement";
+import { calculateRetirement } from "../../src/utils/calculateRetirement";
+
+/**
+ * Convex mutation to calculate retirement metrics.
+ *
+ * @param ctx - The Convex context (contains db, auth, etc.).
+ * @param input - The retirement input parameters.
+ * @returns The retirement output metrics.
+ * @throws Will throw an error if input validation fails.
+ */
+export const calculateFIRE = mutation({
+  args: {
+    age: v.number(),
+    retirementAge: v.number(),
+    monthlySavings: v.number(),
+    retirementAnnualSpending: v.number(),
+    currentNetWorth: v.number(),
+    endAge: v.number(),
+    expectedReturnRate: v.number(),
+  },
+  handler: async (ctx, input: RetirementInput): Promise<RetirementOutput> => {
+    const {
+      age,
+      retirementAge,
+      monthlySavings,
+      retirementAnnualSpending,
+      currentNetWorth,
+      endAge,
+      expectedReturnRate,
+    } = input;
+
+    // Additional Validation (Optional)
+    if (
+      age < 0 ||
+      retirementAge <= age ||
+      monthlySavings < 0 ||
+      retirementAnnualSpending < 0 ||
+      currentNetWorth < 0 ||
+      endAge <= retirementAge ||
+      expectedReturnRate < 0 ||
+      expectedReturnRate > 100 // Assuming a logical upper limit
+    ) {
+      throw new Error("Invalid input values. Please check your entries.");
     }
-  
-    return {
-      totalSavings: parseFloat(inflationAdjustedSavings.toFixed(2)),
-      annualRetirementIncome: parseFloat(annualRetirementIncome.toFixed(2)),
-      yearsInRetirement,
-      detailedYearlySavings,
-    }
-  }
-  
+
+    // Perform the retirement calculation using your utility function
+    const output: RetirementOutput = calculateRetirement(input);
+
+    return output;
+  },
+});
