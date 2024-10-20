@@ -24,60 +24,49 @@ interface SavingsChartProps {
 
 const SavingsChart: React.FC<SavingsChartProps> = ({ data }) => {
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <AreaChart data={data} margin={{ left: 20, right: 20 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-
-        {/* X Axis */}
-        <XAxis dataKey="age" label={{ value: 'Age', position: 'insideBottomRight', offset: -5 }} />
-
-        {/* Y Axis for Net Worth and Contributions */}
-        <YAxis
-          label={{
-            value: 'Amount ($)',
-            angle: -90,
-            position: 'insideLeft',
-            offset: 10, // Offset to avoid overlap
-            dy: -10, // Move the label up slightly
-          }}
-          tickMargin={10} // Add margin for better visibility of the ticks
-        />
-
-        {/* Tooltip with custom formatter to show the ratio */}
-        <Tooltip
-          formatter={(value: number, name: string, props: any) => {
-            if (name === 'Net Worth') {
-              const ratio = props.payload.ratio;
-              return [
-                `$${value.toLocaleString()}`,
-                `${name} (${ratio.toFixed(1)}x ratio)`,
-              ];
-            }
-            return [`$${value.toLocaleString()}`, name];
-          }}
-        />
-
-        {/* Area for Contributions */}
-        <Area
-          type="monotone"
-          dataKey="contributions"
-          stroke="#8884d8"
-          fill="#8884d8"
-          fillOpacity={0.4}
-          name="Contributions"
-        />
-
-        {/* Area for Net Worth */}
-        <Area
-          type="monotone"
-          dataKey="netWorth"
-          stroke="#82ca9d"
-          fill="#82ca9d"
-          fillOpacity={0.6}
-          name="Net Worth"
-        />
-      </AreaChart>
-    </ResponsiveContainer>
+    <div className="dark:bg-gray-900 bg-gray-100 p-4 rounded-lg"> {/* Set dark background for container */}
+      <ResponsiveContainer width="100%" height={400}>
+        <AreaChart
+          data={data}
+          margin={{ left: 20, right: 20 }}
+          className="dark:bg-gray-900 bg-gray-100" // Set dark background inside the chart
+        >
+          <CartesianGrid strokeDasharray="3 3" className="dark:stroke-gray-700" />
+          <XAxis
+            dataKey="age"
+            label={{ value: 'Age', position: 'insideBottomRight', offset: -5 }}
+            tick={{ fill: 'white' }} // Change text color to white in dark mode
+          />
+          <YAxis
+            label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft' }}
+            tick={{ fill: 'white' }} // Change Y axis text color in dark mode
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: '#333', // Dark background for tooltips
+              borderColor: '#555', // Darker border for tooltips
+              color: 'white', // Light text in tooltips
+            }}
+          />
+          <Area
+            type="monotone"
+            dataKey="contributions"
+            stroke="#8884d8"
+            fill="#8884d8"
+            fillOpacity={0.4}
+            name="Contributions"
+          />
+          <Area
+            type="monotone"
+            dataKey="netWorth"
+            stroke="#82ca9d"
+            fill="#82ca9d"
+            fillOpacity={0.6}
+            name="Net Worth"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

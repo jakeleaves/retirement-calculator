@@ -57,7 +57,8 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Updated background for dark mode */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
         <RetirementForm
           input={input}
           handleChange={handleChange}
@@ -68,8 +69,9 @@ const HomePage: React.FC = () => {
       </div>
 
       {output && (
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-8">
-          <h3 className="text-xl font-semibold mb-4">Net Worth Growth by Age</h3>
+        // Updated background for dark mode
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-200">Net Worth Growth by Age</h3>
           <SavingsChart data={chartData} />
         </div>
       )}
