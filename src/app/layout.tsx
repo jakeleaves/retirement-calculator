@@ -4,6 +4,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 import ClientProvider from '@/components/ClientProvider';
 import DarkModeToggle from '@/components/DarkModeToggle'; // Import the dark mode toggle
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
   title: 'Retirement Calculator',
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main className="flex-grow flex items-center justify-center">
             {children}
           </main>
+          <Analytics />
           <footer className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm text-center py-4 mt-8">
             <div className="container mx-auto">
               © {new Date().getFullYear()} Your Company. All rights reserved.
