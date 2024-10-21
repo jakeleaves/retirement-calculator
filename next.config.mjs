@@ -1,9 +1,9 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-    output: 'export',
-    trailingSlash: true,
-    basePath: '/retirement-calculator',
-    assetPrefix: '/retirement-calculator/',
-};
+// next.config.mjs
 
-export default nextConfig;
+const isProd = process.env.NODE_ENV === 'production';
+
+export default {
+  // Enable static HTML export
+  output: 'export',
+
+};
